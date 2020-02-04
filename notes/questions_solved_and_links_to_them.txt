@@ -1,0 +1,88 @@
+1)Reverse Vowels (Link :https://leetcode.com/problems/reverse-vowels-of-a-string/). Two pointer implementation.
+2)Decode Ways (Link:https://leetcode.com/problems/decode-ways/) DP implementation 
+ int[] dp = new int[s.length()+1];
+        dp[0] = 1;
+        dp[1] = s.charAt(0) == '0' ? 0:1;
+        for(int i = 2;i<s.length()+1;i++){
+            //here is the main logic
+            int oneDigit = Integer.valueOf(s.substring(i-1,i));
+            int twoDigit = Integer.valueOf(s.substring(i-2,i));
+            if(oneDigit>=1){
+                dp[i] += dp[i-1];
+            }
+            if(twoDigit >= 10 && twoDigit <= 26){
+                dp[i] += dp[i-2];
+            }
+        }
+        return dp[s.length()];
+
+3)Optimal Division (Link:https://leetcode.com/problems/optimal-division/) Intuitive Solution
+    public String optimalDivision(int[] nums) {
+         if (nums == null || nums.length == 0) {
+            return "";
+        }
+        if (nums.length == 1) {
+            return nums[0] + "";
+        }
+        if (nums.length == 2) {
+            return nums[0] + "/" + nums[1];
+        }
+        StringBuilder s = new StringBuilder();
+        s.append(nums[0] + "/(" + nums[1]);
+        for (int i = 2; i < nums.length; i++) {
+            s.append("/");
+            s.append(nums[i]);
+        }
+        s.append(")");
+        return s.toString(); 
+    }
+4)Coin Change(Link:https://leetcode.com/problems/coin-change/) Dp implementation
+ public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);//Optimising step
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp,amount+1);
+        dp[0] = 0;
+        for(int i = 0;i<=amount;i++){
+            for(int j = 0;j<coins.length;j++){
+                if(coins[j] <= i){
+                    dp[i] = Math.min(dp[i],1+dp[i-coins[j]]);
+                }else{
+                    //optimising step
+                    break;
+                }
+            }
+        }
+        return dp[amount]>amount ? -1:dp[amount];
+    }
+5)Partition Labels(Link:https://leetcode.com/problems/partition-labels/)
+
+Input: S = "ababcbacadefegdehijhklij"
+Output: [9,7,8]
+Explanation:
+The partition is "ababcbaca", "defegde", "hijhklij".
+This is a partition so that each letter appears in at most one part.
+A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits S into less parts.
+
+public List<Integer> partitionLabels(String S) {
+        int[] lastIndex = new int[26];
+        for(int i = 0;i<S.length();i++){
+            // We store the last occurance of each occuring character.
+            lastIndex[S.charAt(i)-'a'] = i;
+        }
+        
+        List<Integer> partitions = new ArrayList<>();
+        int i = 0;
+        while(i<S.length()){
+            //We use the Last Index array to find the last occurance
+            //of each character from the start.
+            int end = lastIndex[S.charAt(i) - 'a'];
+            int j = i;//important that you start from the first Index.
+            while(j!=end){
+                //This is kind of Intuituve now
+                end = Math.max(end,lastIndex[S.charAt(j++)-'a']);
+            }
+            partitions.add(j-i+1);
+            i = j+1;
+        }
+        return partitions;
+    }
