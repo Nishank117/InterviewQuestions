@@ -21,6 +21,7 @@ class GfG
           //add code here.
           boolean[] visited = new boolean[V];
           int[] color = new int[V];
+          //making sure none of them is visited
           Arrays.fill(visited,false);
           dfs(visited,color,grid,0,1);
           if(bipartite){
