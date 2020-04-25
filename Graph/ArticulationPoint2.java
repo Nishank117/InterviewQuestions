@@ -1,97 +1,96 @@
 class Solution {
+
+    List<Integer>[] graph;
+    boolean[] visited;
     
-    public ArrayList<Integer>[] graph ; 
-    public List<List<Integer>> res ;
-    int[] visitedTimes ;
-    int[] lowTimes ; 
-    int time ;
+     // It tracks visited counter (depth). Every DFS increments this number. 
+    // Once assigned, Its never changed.
+    int[] visitedTime; 
+    
+    // It tracks lower visited Time. (Hold on to it. You will understand later).
+    // One think to note : at start, it will be same as visitedTime. Later it can change.
+    int[] lowTime;
+    
+    int time;
+            
     public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        List<List<Integer>> critical = new ArrayList<>();
+        graph = new ArrayList[n];
+        time = 0;
+        lowTime = new int[n];
+        visitedTime = new int[n];
+        visited = new boolean[n];
         
-        // adjacency list ;
-        buildList( n , connections ) ;
-        
-        //initialize visited and low times array 
-        visitedTimes = new int[n] ;
-        lowTimes = new int[n] ;
-        
-        // result list
-        res =  new ArrayList<List<Integer>>() ; 
-        
-        //to mark visited nodes create a boolean visited array
-        boolean[] visited = new boolean[n] ;
-        
-        time = 0 ; 
-        
-        dfsOnGraph( visited , 0 , -1 ) ; // starting with currNode 0 and parentNode -1
-         
-        return res ;
+        buildGraph(n, connections);
+        dfs(critical, 0, -1);
+        return critical;
     }
     
-    private void dfsOnGraph( boolean[] visited, int currNode , int parentNode ) {
+    private void buildGraph(int n, List<List<Integer>> connections) {
+        for(int i = 0 ; i < n ; i++)
+        {
+            graph[i] = new ArrayList<Integer>();
+        }
         
-        // mark node as visited
-        visited[currNode] = true ;
-        
-        // mark the visited time for the node
-        visitedTimes[currNode] = time ; 
-        lowTimes[currNode] = time ;
-        time++ ;
-        
-        // explore neighbors 
-        for( int neig : graph[currNode] ) {
+        for(List<Integer> item : connections)
+        {
+            int a = item.get(0);
+            int b = item.get(1);
             
-            if( neig == parentNode ) continue ;
+            graph[a].add(b);
+            graph[b].add(a);
+        }
+    }
+    
+    private void dfs(List<List<Integer>> critical, int currentNode, int parentNode) {
+       // Set current node as visited and assign Time starting from 0.
+        visited[currentNode] = true;
+        visitedTime[currentNode] = lowTime[currentNode] = time++;
+        
+        List<Integer> neighbors = graph[currentNode];
+        for(Integer neighbor : neighbors)
+        {
+            // Three options. Neighbors could be of 3 types.
+            // 1) Parent
+            // 2) Not Visited
+            // 3) Visited.
             
-            if( !visited[neig] ) {
-                dfsOnGraph( visited , neig , currNode ) ;
+            // If parent, ignore, 
+            // If not visited, apply another dfs on neighor
+            // If visited , pick some important information from neigbor...
+            // (think about what it is) ...
+            // One thing is obvious, vistedTime of previously visited nodes will be lower than current's.
+            // Perhaps, you can copy it into current's lowTime. 
+            
+            if(neighbor == parentNode)
+                continue;
+            
+            // Jump to else condition first then come back here.
+            if(!visited[neighbor])
+            {
+                dfs(critical, neighbor, currentNode);
+        // after we finish DFS, there is a possiblity neighor's lowerTime less than current. 
+                lowTime[currentNode] = Math.min(lowTime[currentNode], lowTime[neighbor]);
                 
-                lowTimes[currNode] = Math.min(lowTimes[currNode] , lowTimes[neig] ) ; // back propogate lowest time in a cycle
-                                                                                      // so all nodes are updated with lowest
-                                                                                      // lowTimes in that cycle
-																					  
-                // once dfs ends check 
-                // if for curr node the visitedTime is less than lowTime of neig 
-                // that indicates there is no backgate for the neig for its lowTime to be updated
-                if( visitedTimes[currNode] < lowTimes[neig] ) {
-                    res.add(Arrays.asList( currNode , neig )) ;         // found articulation point 
+        // we know vistedTime[currentNode] < visitedTime[neighbor] (always) 
+        // b/c neighour are accessed after current)
+        // ----        
+        // But neighbor's lowerTime could be less than current, which means they had touch any cycle node. (covered by above line of code)
+        // Or It's also possible that
+        // neighbor's lowerTime could be higher than current, which means they didn't touch any previously visited node or had a cycle.
+        // If later is true, there is bridge, if we delete this edge, graph will be broken into two components. So, its critical.
+                if(lowTime[neighbor] > visitedTime[currentNode])
+                {
+                    ArrayList<Integer> both = new ArrayList<>(); both.add(currentNode); both.add(neighbor);
+                    critical.add(both);
                 }
-            } else {
-                    // explored a backgate to the node
-                    // means there is no articulation point 
-                lowTimes[currNode] = Math.min( lowTimes[currNode] , visitedTimes[neig] ) ;
-                
-				// here 1's lowTime is updated since when we have currNode 1 and neigbor is 0 we
-				// come into this else part here and update the 1's lowTime .
-				
-                // here  3's lowTime is not updated since there is no way we can reach 3 via 2 or 0 
-				//since we do not arrive here so 3's low time and visited time remains greater
-                
-            } 
+            }
+            else
+            {
+                // whenever you look at already visited node, just pick its visitedTime/lowTime if it's lower.
+                // it will be lower if It was visited earlier and probably making a cycle.
+                lowTime[currentNode] = Math.min(lowTime[currentNode], lowTime[neighbor]);
+            }
         }
-              
-        
     }
-   
-   //building the adjanceny list
-    private void buildList( int noOfNodes , List<List<Integer>> connections ) {
-        
-        graph = new ArrayList[noOfNodes] ;
-        
-        for( int i = 0 ; i < graph.length ; i++ ) {
-            graph[i] = new ArrayList<Integer>() ;
-        }
-        
-        for( List<Integer> conn : connections ) {
-            
-            int fNode = conn.get(0) ;
-            int sNode = conn.get(1) ;
-            
-            graph[fNode].add(sNode) ;
-            graph[sNode].add(fNode) ;
-            
-        }
- 
-        
     }
-    
-}
