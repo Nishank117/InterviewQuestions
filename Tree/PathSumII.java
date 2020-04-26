@@ -26,6 +26,7 @@ class Solution {
         if(root.left == null && root.right == null && sum == root.val){
             parentList.add(root.val);
             results.add(new ArrayList<>(parentList));
+            //removing is neccessary because there might be other paths to it also with other neighboring nodes
             parentList.remove(parentList.size()-1);
             return;
         }else{
