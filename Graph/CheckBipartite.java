@@ -1,18 +1,18 @@
 class GfG
 {
       boolean bipartite = true;
-      private void dfs(boolean[] visited,int[] color,int[][] grid,int src,int curr){
+      private void dfs(boolean[] visited,int[] color,int[][] grid,int src,int currentColor){
           visited[src] = true;
-          color[src] = curr;
+          color[src] = currentColor;
           for(int i = 0;i<visited.length;i++){
               if(grid[src][i] == 1){
-                  if(color[i] == curr){
+                  if(color[i] == currentColor){
                       bipartite = false;
                       return;
                   }
               }
               if(!visited[i]){
-                  dfs(visited,color,grid,i,curr==1?2:1);
+                  dfs(visited,color,grid,i,currentColor==1?2:1);
               }
           }
       }
