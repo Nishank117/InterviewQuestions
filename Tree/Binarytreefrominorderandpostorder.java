@@ -27,6 +27,7 @@ class Solution {
             }
         }
         head.left = helper(preStart+1,inStart,i-1,preorder,inorder);
+        //this is very important.
         head.right = helper(preStart+i-inStart+1,i+1,inEnd,preorder,inorder);
             
         return head;
