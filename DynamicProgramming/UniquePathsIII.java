@@ -6,7 +6,7 @@
 //so if you find the path we will numEmpty+2 ****
 //we will find a unique path.
 //basic dfs with backtracking 
-//-1 when found don't traverse
+//-1 when found don't traverse that obstacle
 
 
 class Solution {
