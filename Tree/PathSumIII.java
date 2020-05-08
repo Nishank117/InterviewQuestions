@@ -17,6 +17,7 @@ class Solution {
         }
         //calculating the prefix sum
         currSum += root.val;
+        //PrefixSum technique.
         if(preSum.containsKey(currSum-target)){
             count+=preSum.get(currSum-target);
         }        
