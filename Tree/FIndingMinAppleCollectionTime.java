@@ -1,4 +1,6 @@
 class Solution {
+    //The idea behind solving this problem is to find the apples using dfs 
+    //and then the count will be +2 the previous one
     Map<Integer,List<GraphNode>> map;
     Set<Integer> appleSet;
     public int minTime(int n, int[][] edges, List<Boolean> hasApple) {
