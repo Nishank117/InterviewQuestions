@@ -1,4 +1,5 @@
 class Solution {
+    //cam use it as a common template for all  java backtracking questions
     List<List<Integer>> result;
     public List<List<Integer>> subsets(int[] nums) {
         result = new ArrayList<>();
