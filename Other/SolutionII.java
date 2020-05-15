@@ -64,14 +64,10 @@ public class SolutionII{
         int t = fr.ni();
         while(t>0){
             long n = fr.nextLong();
-            long m = fr.nextLong();
-            if(n == 1L){
-                System.out.println(0L);
-            }else if(n == 2L){
-                System.out.println(m);
-            }else{
-                System.out.println(2*m);
-            }
+            n/=2;
+            long res = (n*(n+1)*(2*n+1))/6;
+            res*=8;
+            System.out.println(res);
             t--;
         }
     }
