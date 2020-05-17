@@ -62,13 +62,26 @@ public class SolutionII{
         FastReader fr = new FastReader();
 
         int t = fr.ni();
-        while(t>0){
-            long n = fr.nextLong();
-            n/=2;
-            long res = (n*(n+1)*(2*n+1))/6;
-            res*=8;
-            System.out.println(res);
-            t--;
+        while(t-- >0){
+            int n = fr.ni();
+            int temp = n;
+            int[] arr = new int[n+1];
+            int[] dp = new int[n+1];
+            for(int i = 1;i<n+1;i++){
+                arr[i] = fr.ni();
+            }
+            Arrays.sort(arr,1,n+1);
+            int count = 1;
+            for(int i = 1;i<n+1;i++){
+                dp[i] = 0;
+                if(i>=arr[i]){
+                    dp[i] = dp[i-arr[i]] + 1;
+                }else{
+                    dp[i] = dp[i-1];
+                }
+                count = Math.max(dp[i],count);
+            }
+            System.out.println(count);
         }
     }
 }
