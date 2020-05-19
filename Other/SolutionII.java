@@ -60,28 +60,32 @@ public class SolutionII{
     } 
     public static void main(String[] args){
         FastReader fr = new FastReader();
-
-        int t = fr.ni();
-        while(t-- >0){
-            int n = fr.ni();
-            int temp = n;
-            int[] arr = new int[n+1];
-            int[] dp = new int[n+1];
-            for(int i = 1;i<n+1;i++){
-                arr[i] = fr.ni();
+    
+        int n = fr.ni();
+        int k = fr.ni();
+        List<Integer> list = new ArrayList<>();
+        for(int i = 0;i<n;i++){
+            list.add(fr.ni());
+        }
+        int[] q = new int[k];
+        for(int j = 0;j<k;j++){
+            q[j] = fr.ni();
+        }
+        Collections.sort(list);
+        
+        for(int j = 0;j<k;j++){
+            if(q[j]<0){
+                int index = Math.abs(q[j]);
+                if(index-1<list.size())
+                    list.remove(index-1);
+            }else{
+                list.add(q[j]);
             }
-            Arrays.sort(arr,1,n+1);
-            int count = 1;
-            for(int i = 1;i<n+1;i++){
-                dp[i] = 0;
-                if(i>=arr[i]){
-                    dp[i] = dp[i-arr[i]] + 1;
-                }else{
-                    dp[i] = dp[i-1];
-                }
-                count = Math.max(dp[i],count);
-            }
-            System.out.println(count);
+        }
+        if(list.size() == 0){
+            System.out.println(0);
+        }else{
+            System.out.println(list.get(0));
         }
     }
 }
