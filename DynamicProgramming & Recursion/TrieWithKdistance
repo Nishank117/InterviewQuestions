@@ -1,0 +1,87 @@
+struct node
+{
+	node * edges[26];
+	bool validWord;
+node()
+	{
+		validWord = 0;
+		for(int i = 0; i < 26; i++)
+			edges[i] = NULL;
+}
+};
+
+class trie
+{
+	public :
+     		node * root;
+		trie()
+		{
+			root = new node();	
+		}	
+		void insert(string word)
+		{
+			node * curr = root;
+for(int i = 0; i < word.length(); i++)
+{
+	if(curr -> edges[word[i] - 'a'] == NULL)
+	{
+		curr -> edges[word[i] - 'a'] = new node();
+	}
+	curr = curr -> edges[word[i] - 'a'];
+}	
+curr -> validWord = 1;
+		}
+		bool approxFind(string& word, int i, int k, node * curr)
+		{
+			if(k < 0)
+				return false;
+if(i == word.length())
+			{
+				return k == 0 && curr -> validWord;
+}	
+
+
+bool found = 0;
+for(int it = 0; it < 26; it++)
+{
+if(curr -> edges[it] != NULL)
+{
+	if(it == word[i] - 'a')
+		found |= 
+  approxFind(word,i+1,k,curr -> edges[it]);
+else 
+  found |= approxFind(word,i+1,k-1,curr -> edges[it]);
+}	
+}
+return found;
+		}
+		
+};
+
+class MagicDictionary {
+public:
+    trie *myTrie; 
+    /** Initialize your data structure here. */
+    MagicDictionary() {
+       myTrie = new trie();
+    }
+    
+    /** Build a dictionary through a list of words */
+    void buildDict(vector<string> dict) {
+        for(string word : dict)
+            myTrie->insert(word);
+    }
+    
+    /** Returns if there is any word in the trie that equals to the given word after modifying exactly one character */
+    bool search(string word) {
+        return myTrie->approxFind(word,0,1,myTrie->root);
+    }
+};
+
+/**
+ * Your MagicDictionary object will be instantiated and called as such:
+ * MagicDictionary* obj = new MagicDictionary();
+ * obj->buildDict(dict);
+ * bool param_2 = obj->search(word);
+ */
+
