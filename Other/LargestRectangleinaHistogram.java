@@ -16,6 +16,9 @@ class Solution {
                 stack.push(i++);
             }else{
                 int currentMax = stack.pop();
+                //i-1 because it was already increment by the above if code
+                //and we need to remove the one which is at the top of the stack 
+                //and the index of that top is i-1
                 int area = histogram[currentMax]*(stack.isEmpty()? i:(i-1-stack.peek()));
                 maxArea = Math.max(area,maxArea);
             }

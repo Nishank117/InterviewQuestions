@@ -1,5 +1,8 @@
 import java.util.Arrays;
-
+//find the left boundary 
+//find the right boundary and the height for each row
+//multiply right-left*height
+//max is our answer
 class Solution {
     public int maximalRectangle(char[][] matrix) {
         if(matrix == null || matrix.length == 0){
