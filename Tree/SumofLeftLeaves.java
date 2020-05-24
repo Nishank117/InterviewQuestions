@@ -7,4 +7,3 @@ class Solution {
             return sumOfLeftLeaves(root.left)+sumOfLeftLeaves(root.right);
         }
     } 
-}
