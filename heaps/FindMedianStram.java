@@ -70,10 +70,10 @@ class GFG {
     }
     private static void rebalance(PriorityQueue<Integer> lowers,PriorityQueue<Integer> highers){
         
-        if(lowers.size()-highers.size() >= 2 )
+        if(lowers.size()-highers.size() > 1 )
         {
             highers.add(lowers.poll());
-        }else if(highers.size()-lowers.size() >= 2 ){
+        }else if(highers.size()-lowers.size() > 1 ){
             lowers.add(highers.poll());
         }
     }
@@ -113,3 +113,44 @@ class GFG {
 		}
 	}
 }
+
+//another efficient approach
+class MedianFinder {
+    PriorityQueue<Integer> minHeap;
+    PriorityQueue<Integer> maxHeap;
+    /** initialize your data structure here. */
+    public MedianFinder() {
+        minHeap = new PriorityQueue<>();
+        maxHeap = new PriorityQueue<>(((o1, o2) -> o2.compareTo(o1)));
+    }
+
+    public void addNum(int num) {
+        if(num<findMedian()){
+            maxHeap.add(num);
+        }else{
+            minHeap.add(num);
+        }
+        if(maxHeap.size()>minHeap.size()){
+            minHeap.add(maxHeap.poll());
+        }
+        if(minHeap.size()-maxHeap.size()>1){
+            maxHeap.add(minHeap.poll());
+        }
+    }
+
+    public double findMedian() {
+        if(minHeap.size() == 0 && maxHeap.size() == 0) return 0;
+        if(minHeap.size() == maxHeap.size()){
+            return (double)(minHeap.peek()+maxHeap.peek())/2;
+        }else{
+            return minHeap.peek();
+        }
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
